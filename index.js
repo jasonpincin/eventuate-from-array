@@ -4,7 +4,7 @@ module.exports = createEventuate
 
 function createEventuate (eventuate, array) {
   if (!eventuate || !eventuate.isEventuate)
-    throw new TypeError('first argument must be eventuate factory')
+    throw new TypeError('first argument must be an eventuate factory')
   return arguments.length === 2 ? _createEventuate(array) : _createEventuate
 
   function _createEventuate (array) {
@@ -15,17 +15,24 @@ function createEventuate (eventuate, array) {
 }
 
 function produce (ev, array, idx) {
-  if (array.length <= idx) {
-    ev.emit('exhausted')
-    ev.destroy()
-  }
-  else if (!ev.isSaturated()) {
-    ev.produce(array[idx])
-    setImmediate(produce, ev, array, idx + 1)
+  if (ev.hasConsumer()) {
+    if (array.length <= idx) {
+      ev.emit('exhausted')
+      ev.destroy()
+    }
+    else if (!ev.isSaturated()) {
+      ev.produce(array[idx])
+      setImmediate(produce, ev, array, idx + 1)
+    }
+    else {
+      ev.once('unsaturated', resume)
+    }
   }
   else {
-    ev.once('unsaturated', function () {
-      setImmediate(produce, ev, array, idx)
-    })
+    ev.once('consumerAdded', resume)
+  }
+
+  function resume () {
+    setImmediate(produce, ev, array, idx)
   }
 }

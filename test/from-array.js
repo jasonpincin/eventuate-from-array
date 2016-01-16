@@ -30,3 +30,19 @@ test('permits currying', function (t) {
     t.deepEqual(got, src)
   })
 })
+
+test('waits for consumer', function (t) {
+  t.plan(1)
+
+  var src = [1, 2, 3],
+      num = fromArray(eventuate, src),
+      got = []
+
+  setTimeout(function () {
+    num.consume(function (n) {
+      got.push(n)
+    }).then(function () {
+      t.deepEqual(got, src)
+    })
+  }, 500)
+})
