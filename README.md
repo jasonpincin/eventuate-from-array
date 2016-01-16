@@ -4,7 +4,11 @@
 [![Build Status](https://travis-ci.org/jasonpincin/eventuate-from-array.svg?branch=master)](https://travis-ci.org/jasonpincin/eventuate-from-array)
 [![Coverage Status](https://coveralls.io/repos/jasonpincin/eventuate-from-array/badge.png?branch=master)](https://coveralls.io/r/jasonpincin/eventuate-from-array?branch=master)
 
-Create an eventuate that produces array values.
+Create an eventuate that produces array values. 
+
+Check out [eventuate](https://github.com/jasonpincin/eventuate), which this
+module is a dependency of. If you've installed it, you won't need this module as
+it's exposed via `eventuate.from`.
 
 ## example
 
